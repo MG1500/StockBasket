@@ -77,9 +77,9 @@ def createVector(lTemp):
 def getNews(df,s1,e1,q1):
     
     try:
-        newsapi = NewsApiClient(api_key='113805088ff34263bb09d4eec0624488')
+        newsapi = NewsApiClient(api_key='Your Key')
     except:
-        newsapi = NewsApiClient(api_key='6995d0ea81de47f4b25b4be33cb5f3c4')
+        newsapi = NewsApiClient(api_key='Your another key in case of exception')
 
     try:
         news = newsapi.get_everything(q=q1,from_param=s1,
@@ -176,7 +176,7 @@ def getNews(df,s1,e1,q1):
         
 
         try:
-            newsapi = NewsApiClient(api_key='6995d0ea81de47f4b25b4be33cb5f3c4')
+            newsapi = NewsApiClient(api_key='Your another Key')
             news = newsapi.get_everything(q=q1,from_param=s1,
                                               to=e1,language='en',sort_by='popularity',page_size=100,page=1)
             print(news,"1")
