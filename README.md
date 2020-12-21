@@ -1,2 +1,3 @@
 # StockBasket
-An open source tool to visualize current trends in stock market using Bayesian optimization with sentimental analysis through breaking news
+https://stockbasket.herokuapp.com/
+An open source tool to visualize current trends in stock market with sentimental analysis through breaking news.

@@ -1,7 +1,5 @@
 import numpy as np
 from datetime import datetime
-
-import time
 import os
 
 #For Prediction
@@ -12,7 +10,6 @@ from sklearn.model_selection import train_test_split
 from iexfinance.stocks import Stock
 from iexfinance.stocks import get_historical_data
 import pandas_datareader
-import pandas as pd
 from pandas_datareader import data
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeRegressor
@@ -31,11 +28,19 @@ import time
 import keras
 from keras.models import load_model
 from keras.models import model_from_json
-import json
-from wordcloud import WordCloud
-from PIL import Image
-import base64
-import shutil
+
+
+def getPresentStockClosingPrice(sym):
+
+    end = date.today()
+    start =  date.today()- relativedelta(days=+19)
+    df = data.get_data_yahoo(sym, start, end)
+
+    yTemp={'Date':list(df.index),'Closing':list(df['Close'])}
+
+    return yTemp
+    
+
 
 def predict_news(X_test):
    
@@ -57,249 +62,6 @@ def predict_news(X_test):
 
 
 
-def getWordCloud(q1):
-
- 
-    text = "Insert Your text here"
-    try:
-        newsapi = NewsApiClient(api_key='Your Key')
-    except:
-        newsapi = NewsApiClient(api_key='Your another Key incase of exception')
-        
-        
-    end = date.today()
-    start =  date.today() - relativedelta(days=+10)
-
-    s1=str(start).split(" ")[0]
-    e1=str(end).split(" ")[0]
-
-    
-
-    try:
-        news = newsapi.get_everything(q=q1,from_param=s1,
-                                              to=e1,language='en',sort_by='popularity',page_size=100,page=1)
-
-        #arranging the news articles in a numpy array
-        news_data = [] #np.array(['publishedAt','title','description','content','url'])
-        index = 0
-        for i in news['articles']:
-          k=0
-          data = []
-          while k!=1:
-            data.append(i["publishedAt"])
-            data.append(i["title"])
-            data.append(i["description"])
-            data.append(i["content"])
-            data.append(i["url"])
-            data.append(i["urlToImage"])
-            k=1
-          news_data.append(data)
-          
-        nd = np.array(news_data)
-
-
-        data = pd.DataFrame(nd,columns=['Date','Title','Description','Content','URL','Image'])
-
-
-        #Spliting the date and time of each data field.
-        new = data["Date"].str.split("T", n = 1, expand = True)
-        new1 = new[1].str.split("Z", n=1,expand=True)
-        data = data.drop("Date",axis=1)
-        data.insert(loc=0, column='Date', value=new[0])
-        data.insert(loc=1, column='Time', value=new1[0])
-
-
-        data['Date'] =pd.to_datetime(data.Date)
-        dff=data[['Date','Description']].groupby('Date').sum()
-
-        text=" ".join(list(dff['Description']))+q1*15
-        
-        wave_mask = np.array(Image.open( "assets/cloud.jpg"))
-        wordcloud = WordCloud(mask=wave_mask, width=512, height=512, colormap="Greens").generate(text)
-        in1=str(random.randint(0,100000000000000))
-        in2=str(random.randint(0,100000000000000))
-        in3=str(random.randint(0,100000000000000))
-        in4=in1+in2+in3
-              
-        shutil.rmtree('assets/images')
-        os.mkdir("assets/images")
-        # Try
-        wordcloud.to_file("assets/images/"+in4+".jpg")
-
-        print("saved...")
-
-
-        
-##        img1 = base64.b64encode(open("assets/images/"+in4+".jpg", 'rb').read())
-        with open("assets/images/"+in4+".jpg", "rb") as imageFile:
-            img1=base64.b64encode(imageFile.read()).decode("utf-8")
-            
-        print("Yes\n\n")
-        return [img1]
-        
-        
-
-    except Exception as e:
-        print(e)
-        
-        try:
-            newsapi = NewsApiClient(api_key='Your another key')
-            news = newsapi.get_everything(q=q1,from_param=s1,
-                                              to=e1,language='en',sort_by='popularity',page_size=100,page=1)
-            print(news,"1")
-
-            #arranging the news articles in a numpy array
-            news_data = [] #np.array(['publishedAt','title','description','content','url'])
-            index = 0
-            for i in news['articles']:
-              k=0
-              data = []
-              while k!=1:
-                data.append(i["publishedAt"])
-                data.append(i["title"])
-                data.append(i["description"])
-                data.append(i["content"])
-                data.append(i["url"])
-                data.append(i["urlToImage"])
-                k=1
-              news_data.append(data)
-              
-            nd = np.array(news_data)
-
-
-            data = pd.DataFrame(nd,columns=['Date','Title','Description','Content','URL','Image'])
-
-
-            #Spliting the date and time of each data field.
-            new = data["Date"].str.split("T", n = 1, expand = True)
-            new1 = new[1].str.split("Z", n=1,expand=True)
-            data = data.drop("Date",axis=1)
-            data.insert(loc=0, column='Date', value=new[0])
-            data.insert(loc=1, column='Time', value=new1[0])
-
-
-            data['Date'] =pd.to_datetime(data.Date)
-    ##        data = data.sort_values(by='Date')
-
-            data=data.sort_values(by=['Date'],ascending=False)
-
-            return data
-        except:
-            return []
-        return []
-
-
-
-
-def getTrendingNews(q1):
-    
-    try:
-        newsapi = NewsApiClient(api_key='Your Key')
-    except:
-        newsapi = NewsApiClient(api_key='Your another key incase of exception')
-    end = date.today()
-    start =  date.today() - relativedelta(days=+10)
-
-    s1=str(start).split(" ")[0]
-    e1=str(end).split(" ")[0]
-
-    
-
-    try:
-        news = newsapi.get_everything(q=q1,from_param=s1,
-                                              to=e1,language='en',sort_by='popularity',page_size=100,page=1)
-        print(news,"1")
-
-        #arranging the news articles in a numpy array
-        news_data = [] #np.array(['publishedAt','title','description','content','url'])
-        index = 0
-        for i in news['articles']:
-          k=0
-          data = []
-          while k!=1:
-            data.append(i["publishedAt"])
-            data.append(i["title"])
-            data.append(i["description"])
-            data.append(i["content"])
-            data.append(i["url"])
-            data.append(i["urlToImage"])
-            k=1
-          news_data.append(data)
-          
-        nd = np.array(news_data)
-
-
-        data = pd.DataFrame(nd,columns=['Date','Title','Description','Content','URL','Image'])
-
-
-        #Spliting the date and time of each data field.
-        new = data["Date"].str.split("T", n = 1, expand = True)
-        new1 = new[1].str.split("Z", n=1,expand=True)
-        data = data.drop("Date",axis=1)
-        data.insert(loc=0, column='Date', value=new[0])
-        data.insert(loc=1, column='Time', value=new1[0])
-
-
-        data['Date'] =pd.to_datetime(data.Date)
-##        data = data.sort_values(by='Date')
-
-        data=data.sort_values(by=['Date'],ascending=False)
-
-        return data
-    except Exception as e:
-        print(e)
-
-
-        try:
-            newsapi = NewsApiClient(api_key='Your another Key')
-            news = newsapi.get_everything(q=q1,from_param=s1,
-                                              to=e1,language='en',sort_by='popularity',page_size=100,page=1)
-            print(news,"1")
-
-            #arranging the news articles in a numpy array
-            news_data = [] #np.array(['publishedAt','title','description','content','url'])
-            index = 0
-            for i in news['articles']:
-              k=0
-              data = []
-              while k!=1:
-                data.append(i["publishedAt"])
-                data.append(i["title"])
-                data.append(i["description"])
-                data.append(i["content"])
-                data.append(i["url"])
-                data.append(i["urlToImage"])
-                k=1
-              news_data.append(data)
-              
-            nd = np.array(news_data)
-
-
-            data = pd.DataFrame(nd,columns=['Date','Title','Description','Content','URL','Image'])
-
-
-            #Spliting the date and time of each data field.
-            new = data["Date"].str.split("T", n = 1, expand = True)
-            new1 = new[1].str.split("Z", n=1,expand=True)
-            data = data.drop("Date",axis=1)
-            data.insert(loc=0, column='Date', value=new[0])
-            data.insert(loc=1, column='Time', value=new1[0])
-
-
-            data['Date'] =pd.to_datetime(data.Date)
-    ##        data = data.sort_values(by='Date')
-
-            data=data.sort_values(by=['Date'],ascending=False)
-
-            return data
-        except:
-            return []
-        return []
-
-
-
-
-
 def createVector(lTemp):
     combined = np.array(lTemp.loc[:,['Title']])
     z=combined.shape[0]
@@ -313,14 +75,11 @@ def createVector(lTemp):
 
 
 def getNews(df,s1,e1,q1):
-
-
-    try:
-        newsapi = NewsApiClient(api_key='Your key')
-    except:
-        newsapi = NewsApiClient(api_key='Your another key incase of exception')
     
-    #newsapi = NewsApiClient(api_key='Your key')
+    try:
+        newsapi = NewsApiClient(api_key='Your Key')
+    except:
+        newsapi = NewsApiClient(api_key='Your another key in case of exception')
 
     try:
         news = newsapi.get_everything(q=q1,from_param=s1,
@@ -393,16 +152,20 @@ def getNews(df,s1,e1,q1):
         X_test = freq_Vec.toarray()
         mean = np.mean(X_test)
         X_test -= mean
-
-
-        maxScore=max(list(df['Volume']))
-        minScore=min(list(df['Volume']))
-        finScore=(maxScore+minScore)//2     
+            
         prediction=predict_news(X_test)
         ypred=prediction
         pol_score = []
+        
+        maxScore=max(list(df['Volume']))
+        minScore=min(list(df['Volume']))
+        finScore=(maxScore+minScore)//2     
+        #prediction=predict_news(X_test)
+        #ypred=prediction
+        pol_score = []
         for i in range(len(ypred)):
             pol_score.append((ypred[i,1]-ypred[i,0])*finScore)
+
 
         df['Polarity']=pol_score
 
@@ -413,7 +176,7 @@ def getNews(df,s1,e1,q1):
         
 
         try:
-            newsapi = NewsApiClient(api_key='Another key incase of exception')
+            newsapi = NewsApiClient(api_key='Your another Key')
             news = newsapi.get_everything(q=q1,from_param=s1,
                                               to=e1,language='en',sort_by='popularity',page_size=100,page=1)
             print(news,"1")
@@ -510,6 +273,7 @@ def getNews(df,s1,e1,q1):
         return []
 
 
+
   
 
 
@@ -552,11 +316,13 @@ def predictData(stock,days,nnn,labelsStock):
                 start =  date.today() - relativedelta(days=+14+cntDS)
                 start1=date.today() - relativedelta(days=+15+cntDS)
             cntD+=1
-                
-                
-            
-            
-        
+
+    dfLD=df.index[-5:]
+    
+    dfLC=list(df['Close'])[-5:]
+
+    df=df.iloc[:-4,:]
+    
     print(df.head())
     s1=df.index[0]
     e1=df.index[-1]
@@ -583,7 +349,8 @@ def predictData(stock,days,nnn,labelsStock):
     df['prediction'] = df['Close'].shift(-1)
 #     print("after",df.head(1))
 #     print(df['prediction'][-2])
-    print(df.head())
+    print(df.tail())
+    print(df)
     df.dropna(inplace=True)
     print(df.head())
     forecast_time = int(1)
@@ -603,7 +370,9 @@ def predictData(stock,days,nnn,labelsStock):
     print("-----------------")
     print(df)
     print("-----------------")
-    
+
+
+    #currentValue=getPresentStockClosingPrice(stock)
 
 
     
@@ -651,7 +420,7 @@ def predictData(stock,days,nnn,labelsStock):
   #     print("Linear Regression")
   #     print("Prediction",prediction)
   #     print("hejfhiodhviodjivd")
-        return list(l)
+        return [list(l),[dfLD,dfLC]]
     
     
 #     print("Dec Tree")
@@ -695,7 +464,7 @@ def predictData(stock,days,nnn,labelsStock):
         #     print("Random Forest")
         #     print("Prediction",prediction)
         #     print("ashfj")
-        return list(l)
+        return [list(l),[dfLD,dfLC]]
 #     print("Dec Tree")
 #     print("Prediction",prediction)
 #     print("bcnasdb")
@@ -747,7 +516,7 @@ def predictData(stock,days,nnn,labelsStock):
 #     print("Random Forest")
 #     print("Prediction",prediction)
 #     print("ashfj")
-        return list(l)
+        return [list(l),[dfLD,dfLC]]
 
 
 
@@ -790,7 +559,13 @@ def predictDataByVolume(stock,days,nnn,labelsStock):
                 start =  date.today() - relativedelta(days=+14+cntDS)
                 start1=date.today() - relativedelta(days=+15+cntDS)
             cntD+=1
-            
+
+    dfLD=df.index[-5:]
+    
+    dfLV=list(df['Volume'])[-5:]
+
+    df=df.iloc[:-4,:]
+    
     print(df.head())
     s1=df.index[0]
     e1=df.index[-1]
@@ -885,7 +660,7 @@ def predictDataByVolume(stock,days,nnn,labelsStock):
   #     print("Linear Regression")
   #     print("Prediction",prediction)
   #     print("hejfhiodhviodjivd")
-        return list(l)
+        return [list(l),[dfLD,dfLV]]
     
     
 #     print("Dec Tree")
@@ -929,7 +704,7 @@ def predictDataByVolume(stock,days,nnn,labelsStock):
         #     print("Random Forest")
         #     print("Prediction",prediction)
         #     print("ashfj")
-        return list(l)
+        return [list(l),[dfLD,dfLV]]
 #     print("Dec Tree")
 #     print("Prediction",prediction)
 #     print("bcnasdb")
@@ -981,26 +756,6 @@ def predictDataByVolume(stock,days,nnn,labelsStock):
 #     print("Random Forest")
 #     print("Prediction",prediction)
 #     print("ashfj")
-        return list(l)
+        return [list(l),[dfLD,dfLV]]
 
 
-
-
-
-    
-    
-#     print("Logistic")
-#     from sklearn.preprocessing import MinMaxScaler
-#     scaler = MinMaxScaler(feature_range=(0, 1))
-#     scaler = StandardScaler()
-#     X_std = scaler.fit_transform(X_train)
-#     clf = LogisticRegression(random_state=0, multi_class='multinomial', solver='newton-cg')
-#     clf.fit(X_std, Y_train)
-#     prediction = (clf.predict(scaler.fit_transform(X_prediction)))
-#     print("Logistic")
-#     print("Prediction",prediction)
-#     print("trgjhkjgt")
-#     print(prediction)
-    
-#predictData('AAPL', 5, 1)
-#getStocks(5)

@@ -1,28 +1,87 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
 
 
+/* changes-1 */
+
+h4{
+	
+	color: #fff
+	
+}
+
+h5{
+	
+	color: #00ff00
+	
+}
+
+#info-table{
+        width: 100%;
+        border: 1px solid #00ff00;
+		border-collapse: collapse;
+		table-layout: unset !important;
+		overflow: scroll; /* Scrollbar are always visible */
+overflow: auto;   /* Scrollbar is displayed as it's needed */
+white-space: nowrap;
+		}
+		
+		
+#info-table th,td {
+		border-collapse: collapse;
+        padding: 5px;
+		word-wrap: break-word;
+		word-break: break-word;
+      }
+#info-table td {
+        text-align: center;
+      }
+/*#info-table th{
+        background: #00ff00;
+      }*/
+
+#info-table tr:nth-child(even) {
+        background: #f0f0f0;
+        color: #000;
+      }
+#info-table tr:nth-child(odd) {
+        background: #0f0f0f;
+        color: #fff;
+      }
+	  	  
+/*#info-table tr:hover {
+  background-color: #00ff00;
+}
+*/
+
+
+
+
+
+
+
+
+
+
 
 
 
 /*For Scrollbar*/
 
-.timeline-wrapper {
-  height: 300px;
-  max-width: 100%;
-  margin: 2.5rem auto;
-  overflow-y: scroll;
-}
-::-webkit-scrollbar {
-  width: 15px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 15px;
-  background: rgba(0, 0, 0, 0.2);
-}
+/* Scroll Bar */
+ ::-webkit-scrollbar {
+        width: 6px;
+		background-color: #1b1b1b;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,1); 
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1px;
+        -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,1); 
+    }
 
 
 
@@ -225,11 +284,8 @@ height:100%;
 body {
   color: #506784;
   background:
-    linear-gradient(
-      rgba(255, 255, 255, 0.6),
-      rgba(255, 255, 255, 0.6)
-    ),
-    url("https://raw.githubusercontent.com/plotly/dash-docs/master/images/dash-pattern.png");
+  
+    url("https://digitalsynopsis.com/wp-content/uploads/2016/05/sci-fi-monochromatic-gif-animations-carl-burton-23.gif");
   margin: 0px;
 }
 
@@ -498,23 +554,164 @@ section:nth-child(even) {
 }
 
 
+/*  changes */
 
 
-
-
-
-.card{
+.ml-4 navbar-brand{
 	
-  transition: 0.25s;
+	color:#00fff00;
+	
 }
 
+
+.draglayer cursor-crosshair{
+	
+	
+		 background-color: #555;
+	
+}
+
+.main-svg{
+	
+	 color: #555;
+}
+
+.svg-container{
+	
+	 background-color: #555;
+}
+
+.card-header{
+	
+	 color: #fff; 
+	
+}
+
+#radio{
+  color: #fff;	
+	
+}
+
+#radio1{
+  color: #fff;	
+	
+}
+
+#radio10{
+  color: #fff;	
+	
+}
+
+#radio11{
+  color: #fff;	
+	
+}
+
+
+
+
+
+  input[type='radio']:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #fff;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid #7FDBFF;
+    }
+
+    input[type='radio']:checked:after {
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        top: -2px;
+        left: -1px;
+        position: relative;
+        background-color: #00ff00;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid #7FDBFF;
+    }
+
+
+
+p { 
+ color: #fff; 
+} 
+
+
+h4{
+	
+	color: #7FDBFF;
+	
+}
+
+#dropdown .Select--single .Select-value {
+  background-color: #fff;
+}
+
+#dropdown .VirtualizedSelectFocusedOption {
+  background-color: #00ff00;
+}
+
+
+#dropdown1 .Select--single .Select-value {
+  background-color: #fff;
+}
+
+#dropdown1 .VirtualizedSelectFocusedOption {
+  background-color: #00ff00;
+}
+
+#dropdown10 .Select--single .Select-value {
+  background-color: #fff;
+}
+
+#dropdown10 .VirtualizedSelectFocusedOption {
+  background-color: #00ff00;
+}
+
+#dropdown2 .Select--single .Select-value {
+  background-color: #fff;
+}
+
+#dropdown2 .VirtualizedSelectFocusedOption {
+  background-color: #00ff00;
+}
+
+
+
+/*  */
+
+
+.card-img{
+	border: 0.5px solid #00ff00;
+	
+}
+
+.card{
+  
+  background-color: rgba(0,0,0,0.5);
+  transition: 0.25s;
+  border: 0.5px solid #00ff00;
+  margin-bottom:3%;
+}
+
+
+
 .card-img-top:hover{
-	border: #ffaa00 1px solid;
+	border: #00ff00 1px solid;
 	
 }
 
 .card:hover {
-  box-shadow: 0 8px 16px 0 rgba(255,170,0,1);
+  box-shadow: 0 8px 16px 0 rgba(0,255,0,1);
   transition: 0.25s;
 }
 
@@ -700,7 +897,7 @@ input[type="button"] {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
-  color: #555;
+  color: #00ff00;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -724,7 +921,7 @@ button:focus,
 input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
-  color: #333;
+  color: #7FDBFF;
   border-color: #888;
   outline: 0; }
 .button.button-primary,
